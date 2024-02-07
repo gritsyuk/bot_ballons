@@ -3,7 +3,7 @@ import asyncio
 from src.settings import config
 from src.bot.handlers import router
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
-from src.sheduler_job import send_orders
+from src.sheduler_job import send_orders, reminder_watch_calendar
 
 
 bot = Bot(
@@ -17,6 +17,7 @@ dp.include_router(router)
 scheduler = AsyncIOScheduler()
 
 async def main() -> None:
+    
     scheduler.add_job(
                         func=send_orders,
                         trigger="cron",
@@ -25,6 +26,14 @@ async def main() -> None:
                         hour=6, 
                         minute=00,
                     )
+    scheduler.add_job(
+                    func=reminder_watch_calendar,
+                    trigger="cron",
+                    args=(bot,),  
+                    day_of_week='mon-sun',
+                    hour=00, 
+                    minute=9,
+                )
     scheduler.start()
 
 
