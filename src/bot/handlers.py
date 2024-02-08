@@ -5,6 +5,7 @@ from src.constant import PaymentTypes
 from src.kb import admin_keyboard_markup, thenks, button_calendar
 from src.settings import config
 from src.text_msg import did_look_calendar
+from src.sheduler_job import is_look_calendar
 
 router = Router()
 
@@ -26,6 +27,8 @@ async def ok_handler(clbk_query: types.CallbackQuery):
 @router.callback_query( F.data == "look_calendar" )
 async def look_calendar_handler(clbk_query: types.CallbackQuery):
     await clbk_query.message.edit_reply_markup(reply_markup=button_calendar())
+    global is_look_calendar
+    is_look_calendar = 1
     username = clbk_query.from_user.username
     await clbk_query.bot.send_message(chat_id=config.TG_CHANEL_ADMINS_ID,
                                       text = did_look_calendar(username))

@@ -24,7 +24,7 @@ def admin_keyboard_markup() -> InlineKeyboardMarkup:
 def thenks() -> InlineKeyboardMarkup:
     buttons = [
         [
-            InlineKeyboardButton(text="Спасибо, посмотрю", 
+            InlineKeyboardButton(text="Я посмотрел", 
                                  callback_data="look_calendar"
                                  )
         ]
