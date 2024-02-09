@@ -1,9 +1,9 @@
 from asyncio import sleep
-from src.kb import payment_types, thenks
+from src.bot.kb import payment_types, thenks
 from src.gs import message_tg_list
 from aiogram import Bot
 from src.settings import config
-from src import text_msg
+from src.bot import text_msg
 
 
 async def send_orders(bot: Bot ):
@@ -17,10 +17,10 @@ async def reminder_watch_calendar(bot: Bot ):
     await bot.send_message(chat_id=config.TG_CHANEL_DELIVERIES_ID, 
                         text=text_msg.look_calendar,
                         reply_markup=thenks())
-    await check_is_look_calendar(bot, 60 * 2)
+    await check_is_look_calendar(bot, config.MINUTES_TO_CHEK_COURIER)
 
 async def check_is_look_calendar(bot: Bot, delay: int):
-    await sleep(delay)
+    await sleep(delay * 60)
     if  config.IS_LOOK_CALENDAR:
         config.IS_LOOK_CALENDAR = False
     else:

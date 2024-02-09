@@ -1,0 +1,15 @@
+#!/bin/bash
+
+if systemctl is-active --quiet docker; then
+    echo "Docker запущен. Создаем образ..."
+    docker build . -t bot_ballons
+    echo "Запускаем контейнер..."
+    # Запускаем контейнер Docker
+    docker run -v '/var/log/:/var/log/' \
+               -d \
+               --rm
+               --name bot_ballons \
+               bot_ballons
+else
+    echo "Docker не запущен. Невозможно выполнить команду."
+fi

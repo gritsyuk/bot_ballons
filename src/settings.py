@@ -6,10 +6,11 @@ class Settings(BaseSettings):
     TG_CHANEL_DELIVERIES_ID: str
     TG_CHANEL_ADMINS_ID: str
     DB_SPREAD_SHEET_ID: str
-    DB_SHEET_NAME: str
+    DB_SHEET_NAME: str = "Ответы на форму (1)"
     GOOGLE_CREDENTIALS_FILE: str = "ballons-413121-cadbf533f328.json"
-    GG_CALENDAR_URL: str
+    GG_CALENDAR_URL: str = "https://calendar.google.com/calendar/embed?src=87jl6bob5rp1bvbg82b72mgmhs%40group.calendar.google.com&ctz=Europe%2FMoscow"
     IS_LOOK_CALENDAR: bool = False
+    MINUTES_TO_CHEK_COURIER: int = 2
 
     model_config = SettingsConfigDict(env_file=".env")
 

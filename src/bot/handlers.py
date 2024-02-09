@@ -1,10 +1,12 @@
 from aiogram import ( Router, 
                       types,
                       F )
-from src.constant import PaymentTypes
-from src.kb import admin_keyboard_markup, thenks, button_calendar
+from src.bot.constant import PaymentTypes
+from src.bot.kb import (admin_keyboard_markup,
+                       button_calendar)
+from src.bot.text_msg import did_look_calendar
 from src.settings import config
-from src.text_msg import did_look_calendar
+
 
 router = Router()
 

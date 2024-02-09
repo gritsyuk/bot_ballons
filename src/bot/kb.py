@@ -1,5 +1,5 @@
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
-from src.constant import PaymentTypes
+from src.bot.constant import PaymentTypes
 from src.settings import config
 
 buttons = [[InlineKeyboardButton(text=PaymentTypes.TRANSFER.value, callback_data=PaymentTypes.TRANSFER)],

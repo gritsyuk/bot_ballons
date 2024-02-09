@@ -14,6 +14,10 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 
 RUN ln -sf /usr/share/zoneinfo/Europe/Moscow /etc/localtime && echo "Europe/Moscow" > /etc/timezone
 
+
+RUN useradd -m -d /app -s /bin/bash -U user_app
+    
+
 WORKDIR /app
 
 COPY ./requirements.txt .

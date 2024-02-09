@@ -1,9 +1,10 @@
+from asyncio import run as start
+import logging
 from aiogram import Bot, Dispatcher
-import asyncio
 from src.settings import config
 from src.bot.handlers import router
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
-from src.sheduler_job import send_orders, reminder_watch_calendar
+from src.bot.sheduler_job import send_orders, reminder_watch_calendar
 
 
 bot = Bot(
@@ -23,7 +24,7 @@ async def main() -> None:
                         trigger="cron",
                         args=(bot,),  
                         day_of_week='mon-sun',
-                        hour=6, 
+                        hour=5, 
                         minute=00,
                     )
     scheduler.add_job(
@@ -31,7 +32,8 @@ async def main() -> None:
                     trigger="cron",
                     args=(bot,),  
                     day_of_week='mon-sun',
-                    minute='*/5',
+                    hour=20, 
+                    minute=00,
                 )
     scheduler.start()
 
@@ -40,5 +42,9 @@ async def main() -> None:
     await dp.start_polling(bot)
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    logging.basicConfig(filename="/var/log/bot_ballons.log", 
+                        level=logging.INFO,
+                        format="%(asctime)s %(name)s %(levelname)s %(message)s",
+                       )
+    start(main())
 

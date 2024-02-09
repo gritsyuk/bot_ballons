@@ -1,6 +1,6 @@
 from enum import Enum 
 
-class PaymentTypes(Enum):
+class PaymentTypes(str, Enum):
     QR_CODE = "QR код"
     CASH = "Наличные"
     TERMINAL = "Терминал"
