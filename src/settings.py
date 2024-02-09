@@ -9,6 +9,7 @@ class Settings(BaseSettings):
     DB_SHEET_NAME: str
     GOOGLE_CREDENTIALS_FILE: str = "ballons-413121-cadbf533f328.json"
     GG_CALENDAR_URL: str
+    IS_LOOK_CALENDAR: bool = False
 
     model_config = SettingsConfigDict(env_file=".env")
 

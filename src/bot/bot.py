@@ -15,7 +15,6 @@ dp = Dispatcher()
 dp.include_router(router)
 
 scheduler = AsyncIOScheduler()
-is_look_calendar = False
 
 async def main() -> None:
     
@@ -32,8 +31,7 @@ async def main() -> None:
                     trigger="cron",
                     args=(bot,),  
                     day_of_week='mon-sun',
-                    hour=0, 
-                    minute=1,
+                    minute='*/5',
                 )
     scheduler.start()
 
