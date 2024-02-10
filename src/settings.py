@@ -10,7 +10,7 @@ class Settings(BaseSettings):
     GOOGLE_CREDENTIALS_FILE: str = "ballons-413121-cadbf533f328.json"
     GG_CALENDAR_URL: str = "https://calendar.google.com/calendar/embed?src=87jl6bob5rp1bvbg82b72mgmhs%40group.calendar.google.com&ctz=Europe%2FMoscow"
     IS_LOOK_CALENDAR: bool = False
-    MINUTES_TO_CHEK_COURIER: int = 2
+    MINUTES_TO_CHEK_COURIER: int = 30
 
     model_config = SettingsConfigDict(env_file=".env")
 

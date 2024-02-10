@@ -23,9 +23,7 @@ message_tg_list = []
 
 for order in list_order:
     if not order.self_pickup:
-        msg = f"""Имя: {order.client_name}\nТелефон: {order.client_phone}\nАдрес: <code>{order.adress}</code>\nИнфо: {order.comment}\nСумма: <b>{order.price_order} руб.</b>
+        msg = f"""Время: {order.deliver_at.strftime('%H:%M')}\n\nИмя: {order.client_name}\nТелефон: {order.client_phone}\nАдрес: <code>{order.adress}</code>\nИнфо: {order.comment}\nСумма: <b>{order.price_order} руб.</b>
         """
 
         message_tg_list.append(msg)
-
-
