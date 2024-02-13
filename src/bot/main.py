@@ -4,7 +4,7 @@ from aiogram import Bot, Dispatcher
 from src.settings import config
 from src.bot.handlers import router
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
-from src.bot.sheduler_job import send_orders, reminder_watch_calendar
+from src.bot.sheduler_job import send_orders, reminder_watch_calendar, set_jobs
 
 
 bot = Bot(
@@ -18,15 +18,22 @@ dp.include_router(router)
 scheduler = AsyncIOScheduler()
 
 async def main() -> None:
-    
     scheduler.add_job(
-                        func=send_orders,
-                        trigger="cron",
-                        args=(bot,),  
-                        day_of_week='mon-sun',
-                        hour=5, 
-                        minute=00,
-                    )
+                    func=set_jobs,
+                    trigger="cron",
+                    args=(bot, scheduler),  
+                    day_of_week='mon-sun',
+                    hour=5, 
+                    minute=00,
+                )
+    # scheduler.add_job(
+    #                     func=send_orders,
+    #                     trigger="cron",
+    #                     args=(bot,),  
+    #                     day_of_week='mon-sun',
+    #                     hour=5, 
+    #                     minute=00,
+    #                 )
     scheduler.add_job(
                     func=reminder_watch_calendar,
                     trigger="cron",

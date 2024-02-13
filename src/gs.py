@@ -1,11 +1,13 @@
 import gspread
-from src.utils import (
+from utils import (
                   from_str_datatime, 
                   get_index_today, 
                   )
-from src.model import OrderFromSheet
+from model import OrderFromSheet
+from typing import Iterator, Dict
+from datetime import datetime
 
-from src.settings import config
+from settings import config
 
 gc = gspread.service_account(filename=config.GOOGLE_CREDENTIALS_FILE)
 
@@ -21,9 +23,17 @@ list_order = map(lambda el : OrderFromSheet.model_validate(el), selected_orders)
 
 message_tg_list = []
 
-for order in list_order:
-    if not order.self_pickup:
-        msg = f"""Время: {order.deliver_at.strftime('%H:%M')}\n\nИмя: {order.client_name}\nТелефон: {order.client_phone}\nАдрес: <code>{order.adress}</code>\nИнфо: {order.comment}\nСумма: <b>{order.price_order} руб.</b>
-        """
+# for order in list_order:
+#     if not order.self_pickup:
+#         msg = f"""Время: {order.deliver_at.strftime('%H:%M')}\n\nИмя: {order.client_name}\nТелефон: {order.client_phone}\nАдрес: <code>{order.adress}</code>\nИнфо: {order.comment}\nСумма: <b>{order.price_order} руб.</b>
+#         """
 
-        message_tg_list.append(msg)
+#         message_tg_list.append(msg)
+
+
+def job_msg_list() -> Iterator[Dict[datetime, str]]:
+    for order in list_order:
+        if not order.self_pickup:
+            html = f"""Время: {order.deliver_at.strftime('%H:%M')}\nИмя: {order.client_name}\nТелефон: {order.client_phone}\nАдрес: <code>{order.adress}</code>\nИнфо: {order.comment}\nСумма: <b>{order.price_order} руб.</b>
+            """
+            yield dict(dt=order.deliver_at, html_msg=html)
