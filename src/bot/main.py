@@ -3,8 +3,10 @@ import logging
 from aiogram import Bot, Dispatcher
 from src.settings import config
 from src.bot.handlers import router
-from apscheduler.schedulers.asyncio import AsyncIOScheduler
-from src.bot.sheduler_job import send_list_delivery, reminder_watch_calendar, set_jobs
+from src.bot.sheduler_job import (send_list_delivery, 
+                                  reminder_watch_calendar, 
+                                  set_jobs)
+from sheduler import create_sheduler
 
 
 bot = Bot(
@@ -15,7 +17,7 @@ dp = Dispatcher()
 
 dp.include_router(router)
 
-scheduler = AsyncIOScheduler()
+scheduler = create_sheduler()
 
 async def main() -> None:
     scheduler.add_job(
@@ -23,25 +25,29 @@ async def main() -> None:
                     trigger="cron",
                     args=(bot, scheduler),  
                     day_of_week='mon-sun',
-                    hour=5, 
-                    minute=5,
+                    hour=23, 
+                    minute=38,
+                    replace_existing=True
                 )
     scheduler.add_job(
                         func=send_list_delivery,
                         trigger="cron",
                         args=(bot,),  
                         day_of_week='mon-sun',
-                        hour=5, 
-                        minute=00,
+                        hour=23, 
+                        minute=50,
+                        replace_existing=True
                     )
     scheduler.add_job(
                     func=reminder_watch_calendar,
                     trigger="cron",
                     args=(bot,),  
                     day_of_week='mon-sun',
-                    hour=20, 
-                    minute=00,
+                    hour=23, 
+                    minute=40,
+                    replace_existing=True
                 )
+
     scheduler.start()
 
 
@@ -49,7 +55,7 @@ async def main() -> None:
     await dp.start_polling(bot)
 
 if __name__ == "__main__":
-    logging.basicConfig(filename="/var/log/bot_ballons.log", 
+    logging.basicConfig(filename="bot_ballons.log", 
                         level=logging.INFO,
                         format="%(asctime)s %(name)s %(levelname)s %(message)s",
                        )

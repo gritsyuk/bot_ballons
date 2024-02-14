@@ -1,14 +1,14 @@
 import gspread
 import logging
-from src.utils import (
+from utils import (
                   from_str_datatime, 
                   get_index_today, 
                   )
-from src.model import OrderFromSheet
+from model import OrderFromSheet
 from typing import Iterator, Dict
 from datetime import datetime
 
-from src.settings import config
+from settings import config
 
 gc = gspread.service_account(
     filename=config.GOOGLE_CREDENTIALS_FILE
@@ -43,8 +43,8 @@ def job_msg_list() -> Iterator[Dict[datetime, str]]:
             """
             yield dict(dt=order.deliver_at, html_msg=html)
 
-def today_delivery_list(list_delivery) -> str:
-    sorted_list = sorted(list_delivery, key=lambda r: r.deliver_at)
+def today_delivery_list() -> str:
+    sorted_list = sorted(list(list_order), key=lambda r: r.deliver_at)
     res = '🔔 Доставки на сегодня:\n\n'
     for order in sorted_list:
         if not order.self_pickup:
@@ -52,3 +52,6 @@ def today_delivery_list(list_delivery) -> str:
             res += text
     logging.info(res)
     return res
+
+# res = today_delivery_list()
+# print(res)

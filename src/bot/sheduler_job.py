@@ -9,7 +9,7 @@ from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
 async def send_list_delivery(bot: Bot ):
     await bot.send_message(chat_id=config.TG_CHANEL_DELIVERIES_ID, 
-                        text=today_delivery_list,
+                        text=today_delivery_list(),
                         reply_markup=None)
 
 async def send_delivery(bot: Bot, html_msg):
@@ -38,4 +38,5 @@ async def set_jobs(bot: Bot, scheduler: AsyncIOScheduler):
                         func=send_delivery,
                         trigger='date',
                         run_date=job.get("dt"), 
-                        args=[bot, job.get("html_msg")])
+                        args=[bot, job.get("html_msg")],
+                        replace_existing=True)
