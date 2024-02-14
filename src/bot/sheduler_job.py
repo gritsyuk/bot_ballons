@@ -1,18 +1,16 @@
 from asyncio import sleep
 from src.bot.kb import payment_types, thenks
-from src.gs import message_tg_list, job_msg_list
+from src.gs import today_delivery_list, job_msg_list
 from aiogram import Bot
 from src.settings import config
 from src.bot import text_msg
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
 
-async def send_orders(bot: Bot ):
-    for msg in message_tg_list:
-        await bot.send_message(chat_id=config.TG_CHANEL_DELIVERIES_ID, 
-                            text=msg,
-                            reply_markup=payment_types)
-        await sleep(2)
+async def send_list_delivery(bot: Bot ):
+    await bot.send_message(chat_id=config.TG_CHANEL_DELIVERIES_ID, 
+                        text=today_delivery_list,
+                        reply_markup=None)
 
 async def send_delivery(bot: Bot, html_msg):
     await bot.send_message(chat_id=config.TG_CHANEL_DELIVERIES_ID, 
