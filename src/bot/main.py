@@ -25,8 +25,8 @@ async def main() -> None:
                     trigger="cron",
                     args=(bot, scheduler),  
                     day_of_week='mon-sun',
-                    hour=23, 
-                    minute=38,
+                    hour=5, 
+                    minute=2,
                     replace_existing=True
                 )
     scheduler.add_job(
@@ -34,8 +34,8 @@ async def main() -> None:
                         trigger="cron",
                         args=(bot,),  
                         day_of_week='mon-sun',
-                        hour=23, 
-                        minute=50,
+                        hour=5, 
+                        minute=00,
                         replace_existing=True
                     )
     scheduler.add_job(
@@ -43,8 +43,8 @@ async def main() -> None:
                     trigger="cron",
                     args=(bot,),  
                     day_of_week='mon-sun',
-                    hour=23, 
-                    minute=40,
+                    hour=20, 
+                    minute=00,
                     replace_existing=True
                 )
 
