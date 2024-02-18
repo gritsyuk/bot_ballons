@@ -1,4 +1,5 @@
-from datetime import datetime
+from datetime import datetime, timedelta
+import pytz
 from time import time
 from typing import List
 
@@ -25,12 +26,18 @@ def from_str_datatime(el: str):
 
 
 def get_index_today(date_list: List[datetime]) -> List[int]:
-    now = datetime.now()
+    tz = pytz.timezone('Europe/Moscow')
+    current_date = datetime.now(tz=tz)
 
-    start_of_day = datetime(now.year, now.month, now.day, 6, 0)
-    end_of_day = datetime(now.year, now.month, now.day + 1, 0, 59)
+    start_dt = datetime(year=current_date.year, 
+                        month=current_date.month, 
+                        day=current_date.day,
+                        hour=5,
+                        minute=0)
 
-    indexes_in_range = [i for i, dt in enumerate(date_list) if start_of_day <= dt <= end_of_day]
+    end_dt = start_dt + timedelta(hours=20)
+
+    indexes_in_range = [i for i, dt in enumerate(date_list) if start_dt <= dt <= end_dt]
 
     return indexes_in_range
 

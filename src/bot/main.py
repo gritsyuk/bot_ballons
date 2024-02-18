@@ -3,6 +3,7 @@ import logging
 from aiogram import Bot, Dispatcher
 from src.settings import config
 from src.bot.handlers import router
+from src.gs import today_from_sheet
 from src.bot.sheduler_job import (send_list_delivery, 
                                   reminder_watch_calendar, 
                                   set_jobs)
@@ -23,19 +24,19 @@ async def main() -> None:
     scheduler.add_job(
                     func=set_jobs,
                     trigger="cron",
-                    args=(bot, scheduler),  
+                    args=(bot, scheduler, today_from_sheet()),  
                     day_of_week='mon-sun',
                     hour=5, 
-                    minute=2,
+                    minute=1,
                     replace_existing=True
                 )
     scheduler.add_job(
                         func=send_list_delivery,
                         trigger="cron",
-                        args=(bot,),  
+                        args=(bot, today_from_sheet()),  
                         day_of_week='mon-sun',
                         hour=5, 
-                        minute=00,
+                        minute=0,
                         replace_existing=True
                     )
     scheduler.add_job(

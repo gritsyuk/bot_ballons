@@ -1,6 +1,6 @@
 from pydantic import BaseModel, Field, field_validator
-from typing import Union
-from datetime import datetime, time
+import re
+from datetime import datetime
 
 class OrderFromSheet(BaseModel):
     created_at: datetime | None = Field(alias='Отметка времени')
@@ -11,7 +11,7 @@ class OrderFromSheet(BaseModel):
     price_deliver: int | str = Field(alias='Сумма доставки', )
     pay_type: str | None = Field(alias='Оплата')
     info: str | None = Field(alias='Доп инфа к заказу')
-    comment: str | None = Field(alias='Комментарий к заказу')
+    comment: str | int = Field(alias='Комментарий к заказу')
     client_phone: int = Field(alias='Телефон Клиента')
     client_from: str | None = Field(alias='Откуда заказчик')
     deadline_time: str | None = Field(alias='До какого часа доставка')
@@ -42,6 +42,15 @@ class OrderFromSheet(BaseModel):
     def set_self_pickup(cls, value):
         if value == "Самовывоз":
             return True
+
+    @field_validator("price_order", "price_deliver", mode='before')
+    @classmethod
+    def clear_price(cls, value):
+        if isinstance(value, int):
+            return value
+        else:
+            return re.sub(r'[^0-9,\.]', '', str(value))
+
 
     # @field_validator("price_order", "price_deliver", mode='before')
     # @classmethod

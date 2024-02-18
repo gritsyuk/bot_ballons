@@ -5,9 +5,9 @@ from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
 from asyncio import run as start
 from asyncio import sleep
-jobstores = {
-    'default': SQLAlchemyJobStore(url='sqlite:///jobs.sqlite')
-}
+# jobstores = {
+#     'default': SQLAlchemyJobStore(url='sqlite:///jobs.sqlite')
+# }
 # executors = {
 #     'default': ThreadPoolExecutor(20),
 #     'processpool': ProcessPoolExecutor(5)
@@ -18,25 +18,24 @@ jobstores = {
 # }
 # scheduler = BackgroundScheduler(jobstores=jobstores, executors=executors, job_defaults=job_defaults, timezone=utc)
 
-
-
+from test_date import curet_time
+from gs import today_delivery_list
 
 async def test1(text):
     print(text)
 
-
+deliveries_date = list(map(from_str_datatime, deliveries_date_col))
 async def main() -> None:
-    scheduler = AsyncIOScheduler(jobstores=jobstores)
+    scheduler = AsyncIOScheduler()
     scheduler.add_job(
-                    func=test1,
+                    func=today_delivery_list,
                     trigger="cron",
-                    args=("dgfgh",),  
+                    args=(deliveries_date(),),  
                     day_of_week='mon-sun',
-                    hour=22, 
-                    minute=56,
+                    second='*/10',
                 )
     scheduler.start()
-
+    await sleep(180)
 
 if __name__ == "__main__":
     start(main())
