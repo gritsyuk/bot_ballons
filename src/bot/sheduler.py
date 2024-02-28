@@ -2,10 +2,11 @@ from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from apscheduler.jobstores.sqlalchemy import SQLAlchemyJobStore
 from apscheduler.executors.pool import ThreadPoolExecutor, ProcessPoolExecutor
 
-def create_sheduler():
-    jobstores = {
-    'default': SQLAlchemyJobStore(url='sqlite:///jobs.sqlite')
-    }
+
+def create_sheduler() -> AsyncIOScheduler():
+    # jobstores = {
+    # 'default': SQLAlchemyJobStore(url='sqlite:///jobs.sqlite')
+    # }
     executors = {
         'default': ThreadPoolExecutor(20),
         'processpool': ProcessPoolExecutor(5)

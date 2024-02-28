@@ -1,5 +1,6 @@
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
+
 class Settings(BaseSettings):
     TG_BOT_TOKEN: str
     TG_BOT_UNAME: str
@@ -13,5 +14,6 @@ class Settings(BaseSettings):
     MINUTES_TO_CHEK_COURIER: int = 30
 
     model_config = SettingsConfigDict(env_file=".env")
+
 
 config = Settings()

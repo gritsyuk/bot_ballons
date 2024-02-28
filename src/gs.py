@@ -1,47 +1,64 @@
-import gspread
+import gspread_asyncio
+from settings import config
 import logging
 from src.utils import (
-                  from_str_datatime, 
-                  get_index_today, 
-                  )
+    from_str_datatime,
+    get_index_today,
+)
 from model import OrderFromSheet
-from typing import Iterator, Dict, List
-from datetime import datetime
+from typing import Iterator, List
 
-from settings import config
+from google.oauth2.service_account import Credentials
 
-gc = gspread.service_account(
-    filename=config.GOOGLE_CREDENTIALS_FILE
-    )
 
-def today_from_sheet() -> Iterator[List[OrderFromSheet]]:
-    ss = gc.open_by_key(config.DB_SPREAD_SHEET_ID)
-    sheet = ss.worksheet(config.DB_SHEET_NAME)
-    deliveries_date_col = sheet.col_values(3)[1:]
-    deliveries_date = list(map(from_str_datatime, deliveries_date_col))
+# import asyncio
 
-    index_date = get_index_today(deliveries_date)
 
-    data = sheet.get_all_records()
-    selected_orders = [data[i] for i in index_date]
+class googleSheetsClient(object):
+    def __init__(self, *, credentials_file: str, spread_sheet_id: str, sheet_name: str):
+        self.credentials_file = credentials_file
+        self.spread_sheet_id = spread_sheet_id
+        self.sheet_name = sheet_name
+        self.agcm = gspread_asyncio.AsyncioGspreadClientManager(self._get_creds)
 
-    return map(lambda el : 
-                    OrderFromSheet.model_validate(el), 
-                    selected_orders)
+    def _get_creds(self):
+        creds = Credentials.from_service_account_file(self.credentials_file)
+        scoped = creds.with_scopes([
+            "https://www.googleapis.com/auth/spreadsheets",
+        ])
+        return scoped
 
-def job_msg_list(list_order) -> Iterator[Dict[datetime, str]]:
-    for order in list_order:
-        if not order.self_pickup:
-            html = f"""Время: {order.deliver_at.strftime('%H:%M')}\nИмя: {order.client_name}\nТелефон: {order.client_phone}\nАдрес: <code>{order.adress}</code>\nИнфо: {order.comment}\nСумма: <b>{order.price_order} руб.</b>
-            """
-            yield dict(dt=order.deliver_at, html_msg=html)
+    async def get_today_orders(self) -> Iterator[List[OrderFromSheet]]:
+        agc = await self.agcm.authorize()
+        ss = await agc.open_by_key(self.spread_sheet_id)
+        sheet = await ss.worksheet(self.sheet_name)
+        deliveries_date_col = await sheet.col_values(3)
+        deliveries_date_col = deliveries_date_col[1:]
+        deliveries_date = list(map(from_str_datatime, deliveries_date_col))
 
-def today_delivery_list(list_order) -> str:
-    sorted_list = sorted(list_order, key=lambda r: r.deliver_at)
-    res = '🔔 Доставки на сегодня:\n\n'
-    for order in sorted_list:
-        if not order.self_pickup:
-            text = f"{order.deliver_at.strftime('%H:%M')} | <code>{order.adress}</code> | {order.comment}\n"
-            res += text
-    logging.info(res)
-    return res
+        index_date = get_index_today(deliveries_date)
+
+        data = await sheet.get_all_records()
+        result_orders = [data[i] for i in index_date]
+        logging.debug(result_orders)
+
+        return map(lambda el:
+                   OrderFromSheet.model_validate(el),
+                   result_orders)
+
+
+google_client = googleSheetsClient(credentials_file=config.GOOGLE_CREDENTIALS_FILE,
+                                   spread_sheet_id=config.DB_SPREAD_SHEET_ID,
+                                   sheet_name=config.DB_SHEET_NAME)
+# async def example():
+#     google_client = googleSheetsClient(credentials_file=config.GOOGLE_CREDENTIALS_FILE,
+#                                        spread_sheet_id=config.DB_SPREAD_SHEET_ID,
+#                                        sheet_name=config.DB_SHEET_NAME)
+#
+#     res = await google_client.get_today_orders()
+#     print(res)
+#
+#
+# if __name__ == "__main__":
+#     logging.basicConfig(level=logging.DEBUG)
+#     asyncio.run(example(), debug=True)

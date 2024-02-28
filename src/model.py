@@ -2,6 +2,7 @@ from pydantic import BaseModel, Field, field_validator
 import re
 from datetime import datetime
 
+
 class OrderFromSheet(BaseModel):
     created_at: datetime | None = Field(alias='Отметка времени')
     client_name: str | None = Field(alias='Имя Клиента')
@@ -28,15 +29,15 @@ class OrderFromSheet(BaseModel):
             date_time = value.split(' ')
             day_s, mon_s, year_s = date_time[0].split('.')
             h, m, s = date_time[1].split(':')
-            return datetime(int(year_s), 
-                            int(mon_s), 
-                            int(day_s), 
-                            int(h), 
-                            int(m), 
+            return datetime(int(year_s),
+                            int(mon_s),
+                            int(day_s),
+                            int(h),
+                            int(m),
                             int(s))
         except ValueError:
             return None
-    
+
     @field_validator("self_pickup", mode='before')
     @classmethod
     def set_self_pickup(cls, value):
@@ -51,7 +52,6 @@ class OrderFromSheet(BaseModel):
         else:
             return re.sub(r'[^0-9,\.]', '', str(value))
 
-
     # @field_validator("price_order", "price_deliver", mode='before')
     # @classmethod
     # def to_int(cls, value):
@@ -60,4 +60,3 @@ class OrderFromSheet(BaseModel):
     #     if value is None:
     #         return 0
     #     return int(value)
-        
