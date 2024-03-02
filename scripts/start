@@ -1,13 +1,19 @@
 #!/bin/bash
-
+# Проверяем, запущен ли Docker
 if systemctl is-active --quiet docker; then
-    echo "Docker запущен. Создаем образ..."
-    docker build . -t bot_ballons
+    echo "Docker запущен."
+
+    # Проверяем наличие образа bot_ballons
+    if ! docker image inspect bot_ballons &> /dev/null; then
+        echo "Образ bot_ballons не найден. Создаем образ..."
+        docker build . -t bot_ballons
+    fi
+
     echo "Запускаем контейнер..."
     # Запускаем контейнер Docker
-    docker run -v '/var/log/:/var/log/' \
+    docker run -v "${PWD}/log/:/var/log/" \
                -d \
-               --rm
+               --rm \
                --name bot_ballons \
                bot_ballons
 else
