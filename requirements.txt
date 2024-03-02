@@ -11,6 +11,7 @@ charset-normalizer==3.3.2
 frozenlist==1.4.1
 google-auth==2.28.1
 google-auth-oauthlib==1.2.0
+gspread==6.0.2
 gspread_asyncio==2.0.0
 idna==3.6
 magic-filter==1.0.12
