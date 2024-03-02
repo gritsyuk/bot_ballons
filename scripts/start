@@ -14,7 +14,7 @@ if systemctl is-active --quiet docker; then
     docker run -v "${PWD}/log/:/var/log/" \
                -d \
                --rm \
-               --name bot_ballons \
+               --name ballons \
                bot_ballons
 else
     echo "Docker не запущен. Невозможно выполнить команду."
