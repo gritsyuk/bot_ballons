@@ -15,7 +15,7 @@ def did_look_calendar(user: str = None):
 def today_delivery_list(list_order) -> str:
     sorted_list = sorted(list_order, key=lambda r: r.deliver_at)
     logging.info(f"Sorted_list: {sorted_list}")
-    res = '🔔 Доставки на сегодня:\n\n'
+    res = '🔔 Доставки с 5:00 до 1:00 :\n\n'
     for order in sorted_list:
         if not order.self_pickup:
             text = f"{order.deliver_at.strftime('%H:%M')} | <code>{order.adress}</code> | {order.comment}\n"

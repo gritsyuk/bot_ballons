@@ -6,8 +6,8 @@ async def curet_time():
     tz = pytz.timezone('Europe/Moscow')
     current_date = datetime.now(tz=tz)
 
-    start_dt = datetime(year=current_date.year, 
-                        month=current_date.month, 
+    start_dt = datetime(year=current_date.year,
+                        month=current_date.month,
                         day=current_date.day,
                         hour=5,
                         minute=0)
@@ -16,3 +16,15 @@ async def curet_time():
 
     print(current_date)
     # print(end_dt)
+
+
+def test_split():
+    test_msg = """🎈 НОВАЯ ДОСТАВКА СЕГОДНЯ:
+
+    11:00 | Грайвороновская улица 8К2 |"""
+    msg_body = test_msg.split('\n')[2].strip()
+    time, adress, info = msg_body.split('|')
+    print(time, adress, info)
+
+
+test_split()

@@ -30,8 +30,8 @@ def from_str_datatime(el: str):
 
 def get_index_today(date_list: List[datetime]) -> List[int]:
     tz = pytz.timezone('Europe/Moscow')
-    # current_date = datetime.now(tz=tz)
-    current_date = datetime(2024, 1, 2, tzinfo=tz)
+    current_date = datetime.now(tz=tz)
+    # current_date = datetime(2024, 1, 2, tzinfo=tz)
     logging.info(current_date)
     start_dt = datetime(year=current_date.year,
                         month=current_date.month,

@@ -1,17 +1,14 @@
 import gspread_asyncio
-from settings import config
+from src.settings import config
 import logging
 from src.utils import (
     from_str_datatime,
     get_index_today,
 )
-from model import OrderFromSheet
+from src.model import OrderFromSheet
 from typing import Iterator, List
 
 from google.oauth2.service_account import Credentials
-
-
-# import asyncio
 
 
 class googleSheetsClient(object):
@@ -46,16 +43,31 @@ class googleSheetsClient(object):
                    OrderFromSheet.model_validate(el),
                    result_orders)
 
+    async def get_order_by_row(self, row: int) -> List[OrderFromSheet]:
+        agc = await self.agcm.authorize()
+        ss = await agc.open_by_key(self.spread_sheet_id)
+        sheet = await ss.worksheet(self.sheet_name)
+        header_values = await sheet.row_values(1)
+        data_values = await sheet.row_values(row)
+        while len(data_values) < len(header_values):
+            data_values.append(None)
+        result_dict = dict(zip(header_values, data_values))
+        print(result_dict)
+        result = [OrderFromSheet.model_validate(result_dict)]
+        print(result)
+        return result
+
 
 google_client = googleSheetsClient(credentials_file=config.GOOGLE_CREDENTIALS_FILE,
                                    spread_sheet_id=config.DB_SPREAD_SHEET_ID,
                                    sheet_name=config.DB_SHEET_NAME)
+
 # async def example():
 #     google_client = googleSheetsClient(credentials_file=config.GOOGLE_CREDENTIALS_FILE,
 #                                        spread_sheet_id=config.DB_SPREAD_SHEET_ID,
 #                                        sheet_name=config.DB_SHEET_NAME)
 #
-#     res = await google_client.get_today_orders()
+#     res = await google_client.get_order_by_row(2140)
 #     print(res)
 #
 #
